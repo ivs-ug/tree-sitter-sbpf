@@ -1,0 +1,1190 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
+  "name": "sbpf",
+  "rules": {
+    "source_file": {
+      "type": "REPEAT",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "\n"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "label"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "instruction"
+          }
+        ]
+      }
+    },
+    "directive": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "value",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "identifier"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "immediate"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "\n"
+        }
+      ]
+    },
+    "label": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "comment"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "\n"
+        }
+      ]
+    },
+    "instruction": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "alu64_imm"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "alu64_reg"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "alu32_imm"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "alu32_reg"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "mov64"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "mov32"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "load_imm"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "load_mem"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "store_mem"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "jump_absolute"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "jump_conditional"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "call"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "exit"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "neg64"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "neg32"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "syscall"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "comment"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "\n"
+        }
+      ]
+    },
+    "alu64_imm": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "op",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "add64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "sub64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "mul64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "div64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "or64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "and64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "lsh64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "rsh64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "arsh64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "xor64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "mod64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "xchg64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "cmpxchg64"
+                }
+              ]
+            },
+            "named": true,
+            "value": "mnemonic"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "dst",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "imm",
+          "content": {
+            "type": "SYMBOL",
+            "name": "immediate"
+          }
+        }
+      ]
+    },
+    "alu64_reg": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "op",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "add64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "sub64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "mul64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "div64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "or64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "and64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "lsh64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "rsh64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "arsh64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "xor64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "mod64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "xchg64"
+                },
+                {
+                  "type": "STRING",
+                  "value": "cmpxchg64"
+                }
+              ]
+            },
+            "named": true,
+            "value": "mnemonic"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "dst",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "src",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        }
+      ]
+    },
+    "alu32_imm": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "op",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "add32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "sub32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "mul32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "div32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "or32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "and32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "lsh32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "rsh32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "arsh32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "xor32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "mod32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "xchg32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "cmpxchg32"
+                }
+              ]
+            },
+            "named": true,
+            "value": "mnemonic"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "dst",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "imm",
+          "content": {
+            "type": "SYMBOL",
+            "name": "immediate"
+          }
+        }
+      ]
+    },
+    "alu32_reg": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "op",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "add32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "sub32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "mul32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "div32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "or32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "and32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "lsh32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "rsh32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "arsh32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "xor32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "mod32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "xchg32"
+                },
+                {
+                  "type": "STRING",
+                  "value": "cmpxchg32"
+                }
+              ]
+            },
+            "named": true,
+            "value": "mnemonic"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "dst",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "src",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        }
+      ]
+    },
+    "mov64": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "mov64"
+          },
+          "named": true,
+          "value": "mnemonic"
+        },
+        {
+          "type": "FIELD",
+          "name": "dst",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "src",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "register"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "immediate"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "mov32": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "mov32"
+          },
+          "named": true,
+          "value": "mnemonic"
+        },
+        {
+          "type": "FIELD",
+          "name": "dst",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "src",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "register"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "immediate"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "load_imm": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "op",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "lddw"
+                },
+                {
+                  "type": "STRING",
+                  "value": "ldw"
+                },
+                {
+                  "type": "STRING",
+                  "value": "ldh"
+                },
+                {
+                  "type": "STRING",
+                  "value": "ldb"
+                }
+              ]
+            },
+            "named": true,
+            "value": "mnemonic"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "dst",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "imm",
+          "content": {
+            "type": "SYMBOL",
+            "name": "immediate"
+          }
+        }
+      ]
+    },
+    "load_mem": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "op",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "ldxw"
+                },
+                {
+                  "type": "STRING",
+                  "value": "ldxh"
+                },
+                {
+                  "type": "STRING",
+                  "value": "ldxb"
+                },
+                {
+                  "type": "STRING",
+                  "value": "ldxdw"
+                }
+              ]
+            },
+            "named": true,
+            "value": "mnemonic"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "dst",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "mem",
+          "content": {
+            "type": "SYMBOL",
+            "name": "memory_access"
+          }
+        }
+      ]
+    },
+    "store_mem": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "op",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "stxw"
+                },
+                {
+                  "type": "STRING",
+                  "value": "stxh"
+                },
+                {
+                  "type": "STRING",
+                  "value": "stxb"
+                },
+                {
+                  "type": "STRING",
+                  "value": "stxdw"
+                }
+              ]
+            },
+            "named": true,
+            "value": "mnemonic"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "mem",
+          "content": {
+            "type": "SYMBOL",
+            "name": "memory_access"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "src",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "register"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "immediate"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "jump_absolute": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "ja"
+          },
+          "named": true,
+          "value": "mnemonic"
+        },
+        {
+          "type": "FIELD",
+          "name": "target",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "label_ref"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "immediate"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "jump_conditional": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "op",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "jeq"
+                },
+                {
+                  "type": "STRING",
+                  "value": "jgt"
+                },
+                {
+                  "type": "STRING",
+                  "value": "jge"
+                },
+                {
+                  "type": "STRING",
+                  "value": "jlt"
+                },
+                {
+                  "type": "STRING",
+                  "value": "jle"
+                },
+                {
+                  "type": "STRING",
+                  "value": "jset"
+                },
+                {
+                  "type": "STRING",
+                  "value": "jne"
+                },
+                {
+                  "type": "STRING",
+                  "value": "jsgt"
+                },
+                {
+                  "type": "STRING",
+                  "value": "jsge"
+                },
+                {
+                  "type": "STRING",
+                  "value": "jslt"
+                },
+                {
+                  "type": "STRING",
+                  "value": "jsle"
+                }
+              ]
+            },
+            "named": true,
+            "value": "mnemonic"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "src",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "imm",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "register"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "immediate"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "target",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "label_ref"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "immediate"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "call": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "call"
+          },
+          "named": true,
+          "value": "mnemonic"
+        },
+        {
+          "type": "FIELD",
+          "name": "target",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "immediate"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "exit": {
+      "type": "ALIAS",
+      "content": {
+        "type": "STRING",
+        "value": "exit"
+      },
+      "named": true,
+      "value": "mnemonic"
+    },
+    "neg64": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "neg64"
+          },
+          "named": true,
+          "value": "mnemonic"
+        },
+        {
+          "type": "FIELD",
+          "name": "dst",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        }
+      ]
+    },
+    "neg32": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "neg32"
+          },
+          "named": true,
+          "value": "mnemonic"
+        },
+        {
+          "type": "FIELD",
+          "name": "dst",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        }
+      ]
+    },
+    "syscall": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "syscall"
+          },
+          "named": true,
+          "value": "mnemonic"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "["
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                },
+                {
+                  "type": "STRING",
+                  "value": "]"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "register": {
+      "type": "PATTERN",
+      "value": "r(10|[0-9])"
+    },
+    "immediate": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "PATTERN",
+          "value": "[-]?0x[0-9a-fA-F]+"
+        },
+        {
+          "type": "PATTERN",
+          "value": "[-]?\\d+"
+        }
+      ]
+    },
+    "memory_access": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "["
+        },
+        {
+          "type": "FIELD",
+          "name": "base",
+          "content": {
+            "type": "SYMBOL",
+            "name": "register"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "operator",
+                  "content": {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "+"
+                      },
+                      {
+                        "type": "STRING",
+                        "value": "-"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "FIELD",
+                  "name": "offset",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "immediate"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "]"
+        }
+      ]
+    },
+    "label_ref": {
+      "type": "SYMBOL",
+      "name": "identifier"
+    },
+    "identifier": {
+      "type": "PATTERN",
+      "value": "[a-zA-Z_][a-zA-Z0-9_]*"
+    },
+    "comment": {
+      "type": "PATTERN",
+      "value": "[^\\n]+"
+    }
+  },
+  "extras": [
+    {
+      "type": "PATTERN",
+      "value": "[ \\t\\r\\f]+"
+    }
+  ],
+  "conflicts": [],
+  "precedences": [],
+  "externals": [],
+  "inline": [],
+  "supertypes": [],
+  "reserved": {}
+}
